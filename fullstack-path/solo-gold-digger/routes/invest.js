@@ -1,4 +1,5 @@
 import getGoldPrice from "../data/getGoldPrice.js";
+import { writeTransactionLog } from "../utils/writeTransactionLog.js";
 
 export const invest = async (req, res) => {
   try {
@@ -13,6 +14,8 @@ export const invest = async (req, res) => {
     const goldPricePerOunce = getGoldPrice();
     const purchaseAmount = Number(submission.amount);
     const ounces = purchaseAmount / goldPricePerOunce;
+
+    await writeTransactionLog(purchaseAmount, ounces, goldPricePerOunce);
 
     res.statusCode = 200;
     res.setHeader("Content-Type", "application/json");
