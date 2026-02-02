@@ -1,4 +1,7 @@
 const form = document.querySelector("#investNow");
+const event = new EventSource("/api/gold-price");
+const connectionStatus = document.querySelector("#connection-status");
+const priceDisplay = document.querySelector("#price-display");
 
 async function sendData() {
   const formData = new FormData(form);
@@ -21,10 +24,15 @@ form.addEventListener("submit", (e) => {
   sendData();
 });
 
-try {
-  const res = await fetch("/api/gold-price");
-  const data = await res.json();
-  console.log(data);
-} catch (error) {
-  console.log(error);
-}
+event.onopen = () => {
+  connectionStatus.textContent = "Live Price 🟢";
+};
+
+event.onerror = () => {
+  connectionStatus.textContent = "Disconnected 🔴";
+};
+
+event.onmessage = (e) => {
+  const data = JSON.parse(e.data);
+  priceDisplay.textContent = data.price.toFixed(2);
+};
