@@ -16,7 +16,6 @@ async function sendData() {
     });
 
     const { data } = await res.json();
-    console.log(data);
     investmentSummary.textContent = `You just bought ${data.purchasedOunces.toFixed(2)} ounces (ozt) for $${data.currentGoldPrice.toFixed(2)}. \n You will receive documentation shortly.`;
     dialog.showModal();
 
